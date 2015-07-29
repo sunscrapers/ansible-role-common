@@ -1,4 +1,6 @@
-# Ansible role for common tasks on servers
+# Ansible role for common tasks
+
+[![Build Status](https://travis-ci.org/sunscrapers/ansible-role-common.svg)](https://travis-ci.org/sunscrapers/ansible-role-common)
 
 This role manages remote users, authorized keys and ssh keys.
 
