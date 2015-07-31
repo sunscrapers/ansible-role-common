@@ -29,3 +29,17 @@ common_known_hosts: []
 common_ssh_known_hosts_filename: ~/.ssh/known_hosts
 common_known_hosts_users: "{{ common_users }}"
 ```
+
+## Development
+
+To start developing on this Ansible role you need to install [Vagrant](https://www.vagrantup.com/) first. Then run:
+
+```
+$ vagrant up
+```
+
+to start and provision virtual machine. You can run provisioning again to test idempotence:
+ 
+```
+$ vagrant provision
+```
