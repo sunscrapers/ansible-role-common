@@ -1,9 +1,11 @@
 - hosts: all
-  vars:
-    common_users: ["app"]
-    root_users: ["root"]
-    common_authorized_users: "{{ common_users | union(root_users) }}"
-    common_authorized_keys:
-      - https://github.com/haxoza.keys
-  roles:
-    - ansible-role-common
+  vars_files:
+    - defaults/main.yml
+  tasks:
+    - include: tasks/main.yml
+      vars:
+        common_users: ["app"]
+        root_users: ["root"]
+        common_authorized_users: "{{ common_users | union(root_users) }}"
+        common_authorized_keys:
+          - https://github.com/haxoza.keys
