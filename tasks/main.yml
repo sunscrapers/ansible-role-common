@@ -3,11 +3,16 @@
   user: name="{{ item }}" shell=/bin/bash
   with_items: common_users
 
-- name: add authorized keys for users
-  authorized_key: user="{{ item[0] }}" key="{{ item[1] }}"
+- name: Retrieving all keys
+  shell: /usr/bin/curl {{ item }} 2> /dev/null
+  register: ssh_keys
+  with_items: common_authorized_keys
+
+- name: Adding keys to authorized_keys
+  authorized_key: user="{{ item[0] }}" key="{{ item[1].stdout }}"
   with_nested:
     - common_authorized_users
-    - common_authorized_keys
+    - ssh_keys.results
 
 - name: add private key for users
   copy: content="{{ common_ssh_private_key }}" dest={{ common_ssh_private_key_filename }} mode=600
