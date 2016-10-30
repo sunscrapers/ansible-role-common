@@ -1,7 +1,10 @@
 - hosts: all
+  gather_facts: no
   vars_files:
     - defaults/main.yml
   tasks:
+    - raw: sudo apt-get -y install python
+    - setup: 
     - include: tasks/main.yml
       vars:
         common_users: ["app"]
@@ -9,3 +12,4 @@
         common_authorized_users: "{{ common_users | union(root_users) }}"
         common_authorized_keys:
           - https://github.com/haxoza.keys
+

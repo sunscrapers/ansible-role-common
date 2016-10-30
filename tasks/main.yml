@@ -1,34 +1,29 @@
 
 - name: create users
   user: name="{{ item }}" shell=/bin/bash
-  with_items: common_users
+  with_items: "{{ common_users }}"
 
-- name: Retrieving all keys
-  shell: /usr/bin/curl {{ item }} 2> /dev/null
-  register: ssh_keys
-  with_items: common_authorized_keys
-
-- name: Adding keys to authorized_keys
-  authorized_key: user="{{ item[0] }}" key="{{ item[1].stdout }}"
+- name: add authorized keys for users
+  authorized_key: user="{{ item[0] }}" key="{{ item[1] }}"
   with_nested:
-    - common_authorized_users
-    - ssh_keys.results
+    - "{{ common_authorized_users }}"
+    - "{{ common_authorized_keys }}"
 
 - name: add private key for users
   copy: content="{{ common_ssh_private_key }}" dest={{ common_ssh_private_key_filename }} mode=600
-  sudo_user: "{{ item }}"
-  with_items: common_ssh_keys_users
+  become_user: "{{ item }}"
+  with_items: "{{ common_ssh_keys_users }}"
   when: common_ssh_private_key is defined
 
 - name: add public key for users
   copy: content="{{ common_ssh_public_key }}" dest={{ common_ssh_public_key_filename }} mode=600
-  sudo_user: "{{ item }}"
-  with_items: common_ssh_keys_users
+  become_user: "{{ item }}"
+  with_items: "{{ common_ssh_keys_users }}"
   when: common_ssh_public_key is defined
 
 - name: add known_hosts for users
   lineinfile: line="{{ item[0] }}" dest={{ common_ssh_known_hosts_filename }} state=present create=yes mode=600
-  sudo_user: "{{ item[1] }}"
+  become_user: "{{ item[1] }}"
   with_nested:
-    - common_known_hosts
-    - common_known_hosts_users
+    - "{{ common_known_hosts }}"
+    - "{{ common_known_hosts_users }}"
