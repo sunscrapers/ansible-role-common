@@ -11,18 +11,21 @@
 
 - name: add private key for users
   copy: content="{{ common_ssh_private_key }}" dest={{ common_ssh_private_key_filename }} mode=600
+  become: yes
   become_user: "{{ item }}"
   with_items: "{{ common_ssh_keys_users }}"
   when: common_ssh_private_key is defined
 
 - name: add public key for users
   copy: content="{{ common_ssh_public_key }}" dest={{ common_ssh_public_key_filename }} mode=600
+  become: yes
   become_user: "{{ item }}"
   with_items: "{{ common_ssh_keys_users }}"
   when: common_ssh_public_key is defined
 
 - name: add known_hosts for users
   lineinfile: line="{{ item[0] }}" dest={{ common_ssh_known_hosts_filename }} state=present create=yes mode=600
+  become: yes
   become_user: "{{ item[1] }}"
   with_nested:
     - "{{ common_known_hosts }}"
