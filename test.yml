@@ -3,7 +3,7 @@
   vars_files:
     - defaults/main.yml
   tasks:
-    - raw: sudo apt-get -y install python
+    - raw: test -e /usr/bin/python || (apt -y update && apt install -y python)
     - setup: 
     - include: tasks/main.yml
       vars:

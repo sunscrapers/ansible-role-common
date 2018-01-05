@@ -3,6 +3,12 @@
   user: name="{{ item }}" shell=/bin/bash
   with_items: "{{ common_users }}"
 
+- name: create ssh dirs for users
+  file: path="/home/{{ item }}/.ssh" state=directory
+  become: yes
+  become_user: "{{ item }}"
+  with_items: "{{ common_users }}"
+
 - name: add authorized keys for users
   authorized_key: user="{{ item[0] }}" key="{{ item[1] }}"
   with_nested:
